@@ -1,16 +1,20 @@
-import google.generativeai as genai
 import os
+import io
+import logging
+import aiofiles
 import asyncio
+import google.generativeai as genai
 from dotenv import load_dotenv
 from collections import deque, defaultdict
 from PIL import Image
 import mimetypes
-import io
 
 
 load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("AI_TOKEN")
+
+MAX_FILE_SIZE = 10 * 1024 * 1024
 
 AI_CONFIG = {
     "model": "gemini-1.5-flash",
@@ -28,28 +32,36 @@ model = genai.GenerativeModel(AI_CONFIG['model'])
 user_chat_history = defaultdict(lambda: deque(maxlen=10))
 
 
+async def process_image(file_path: str):
+    if os.path.getsize(file_path) > MAX_FILE_SIZE:
+        return None, "❌ Файл слишком большой."
+    
+    try:
+        return Image.open(file_path), None
+    except Exception:
+        return None, "❌ Ошибка при обработке изображения."
+    
+
+async def process_text(file_path: str):
+    try:
+        async with aiofiles.open(file_path, "r", encoding='utf-8') as f:
+            text = await f.read()
+        return text, None
+    except Exception:
+        return None, "❌ Ошибка при чтении файла."
+
+
 async def process_file(file_path: str):
     mime_type, _ = mimetypes.guess_type(file_path)
 
     if not mime_type:
         return None, "❌ Неизвестный формат файла."
     
-    elif mime_type.startswith("image"): # Photo
-        return Image.open(file_path), None
+    if mime_type.startswith("image"):
+        return await process_image(file_path)
     
-    # elif mime_type.startswith("audio"): # Audio
-    #     return open(file_path, "rb"), None
-    
-    # elif mime_type.startswith("video"): # Video
-    #     return open(file_path, "rb"), None
-    
-    elif mime_type in ["text/plain", "application/pdf", "text/csv"]: # Text files
-        try:
-            with open(file_path, "r", encoding='utf-8') as f:
-                text = f.read()
-            return text, None
-        except Exception:
-            return None, "❌ Ошибка при чтении файла."
+    if mime_type in ["text/plain", "application/pdf", "text/csv"]: # Text files
+        return await process_text(file_path)
 
     else:
         return None, f"❌ Формат {mime_type} не поддерживается."

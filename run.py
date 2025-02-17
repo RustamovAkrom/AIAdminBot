@@ -8,7 +8,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 
 from app.handlers import ai_router, base_router
-from app.helpers import set_bot_commands
+from app.utils import set_bot_commands
 
 
 async def main() -> None:

@@ -1,12 +1,12 @@
-from aiogram import Bot
-from aiogram.types import BotCommand
+import time
+import logging
 
 
-async def set_bot_commands(bot: Bot):
-    commands = [
-        BotCommand(command="ai", description="🤖 Активировать AI"),
-        BotCommand(command="exit", description="❌ Отключить AI"),
-        BotCommand(command="help", description="ℹ️ Помощь"),
-        BotCommand(command="about", description="📌 О проекте"),
-    ]
-    await bot.set_my_commands(commands)
+def processing_time_logger(funk):
+    def wrapper(value):
+        start_time = time.time()
+        result = funk(value)
+        end_time = time.time()
+        processing_time = end_time - start_time
+        logging.info(f"Обработка {result.__name__} заняла {processing_time:.2f} секунд.")
+    return wrapper
