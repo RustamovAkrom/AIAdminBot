@@ -9,19 +9,20 @@ class Payment(AbstractBaseModel):
         PAID = "paid", "Paid"
         FAILED = "failed", "Failed"
 
-    user = models.ForeignKey("bot.TelegramUser", models.CASCADE, related_name="payments")
+    user = models.ForeignKey(
+        "bot.TelegramUser", models.CASCADE, related_name="payments"
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=10)
     status = models.CharField(
-        max_length=7, 
-        choices=StatusChoices.choices,
-        default=StatusChoices.PENDING.value
+        max_length=7, choices=StatusChoices.choices, default=StatusChoices.PENDING.value
     )
+
     class Meta:
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
         db_table = "payments"
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"Payment {self.amount} {self.currency} - {self.status}"
