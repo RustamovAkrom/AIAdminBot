@@ -8,5 +8,8 @@ def processing_time_logger(funk):
         result = funk(value)
         end_time = time.time()
         processing_time = end_time - start_time
-        logging.info(f"Обработка {result.__name__} заняла {processing_time:.2f} секунд.")
+        logging.info(
+            f"Обработка {result.__name__} заняла {processing_time:.2f} секунд."
+        )
+
     return wrapper

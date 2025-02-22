@@ -1,6 +1,4 @@
 import os
-import io
-import logging
 import aiofiles
 import asyncio
 import google.generativeai as genai
@@ -20,14 +18,14 @@ AI_CONFIG = {
     "model": "gemini-1.5-flash",
     "temperature": 0.7,
     "max_tokens": 500,
-    "role": "Ты полезный ассистент, который отвечает кратко и по делу."
+    "role": "Ты полезный ассистент, который отвечает кратко и по делу.",
 }
 
 if not GOOGLE_API_KEY:
     raise ValueError("❌ API-ключ не найден! Проверь .env файл.")
 
 genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel(AI_CONFIG['model'])
+model = genai.GenerativeModel(AI_CONFIG["model"])
 
 user_chat_history = defaultdict(lambda: deque(maxlen=10))
 
@@ -35,16 +33,16 @@ user_chat_history = defaultdict(lambda: deque(maxlen=10))
 async def process_image(file_path: str):
     if os.path.getsize(file_path) > MAX_FILE_SIZE:
         return None, "❌ Файл слишком большой."
-    
+
     try:
         return Image.open(file_path), None
     except Exception:
         return None, "❌ Ошибка при обработке изображения."
-    
+
 
 async def process_text(file_path: str):
     try:
-        async with aiofiles.open(file_path, "r", encoding='utf-8') as f:
+        async with aiofiles.open(file_path, "r", encoding="utf-8") as f:
             text = await f.read()
         return text, None
     except Exception:
@@ -56,20 +54,19 @@ async def process_file(file_path: str):
 
     if not mime_type:
         return None, "❌ Неизвестный формат файла."
-    
+
     if mime_type.startswith("image"):
         return await process_image(file_path)
-    
-    if mime_type in ["text/plain", "application/pdf", "text/csv"]: # Text files
+
+    if mime_type in ["text/plain", "application/pdf", "text/csv"]:  # Text files
         return await process_text(file_path)
 
     else:
         return None, f"❌ Формат {mime_type} не поддерживается."
 
-    
+
 async def ask_gemini(user_id: int, prompt: str, file_path: str = None) -> str:
     try:
-
         messages = list(user_chat_history[user_id])
         messages.append({"role": "user", "parts": [prompt]})
 
@@ -78,8 +75,8 @@ async def ask_gemini(user_id: int, prompt: str, file_path: str = None) -> str:
 
             if error:
                 return error
-            messages[-1]['parts'].append(file_data)
-        
+            messages[-1]["parts"].append(file_data)
+
         response = await asyncio.to_thread(model.generate_content, messages)
 
         if response and hasattr(response, "text"):
@@ -87,7 +84,7 @@ async def ask_gemini(user_id: int, prompt: str, file_path: str = None) -> str:
             user_chat_history[user_id].append({"role": "user", "parts": [prompt]})
             user_chat_history[user_id].append({"role": "model", "parts": [ai_response]})
             return ai_response
-        
+
         else:
             return "❌ Ответ от AI пуст или был заблокирован."
 

@@ -1,9 +1,6 @@
-import os
-from aiogram import Router, F
-from aiogram.types import Message, PhotoSize
+from aiogram import Router
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command, CommandStart
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.fsm.context import FSMContext
 
 
 router = Router()
@@ -16,31 +13,61 @@ async def start(message: Message):
 
 @router.message(Command("help"))
 async def help(message: Message):
-    await message.answer(
-        f"/profile \\- *shahshiy kabinet*\n"
-        f"/about \\- *malumotlarni bilish*\n"
-        f"/ai \\- *Suniy intelektni aktivlashtirish*\n"
-        f"/connect \\- *Men bilan boglanish*\n"
-        f"/feedback \\- *Savol va maslahatlarni qoldirish*\n",
-        parse_mode="MarkdownV2"
+    text = (
+        "✅ /ai — 🤖 Активировать AI\n"
+        "✅ /exit — ❌ Отключить AI\n"
+        "✅ /help — ℹ️ Помощь\n"
+        "✅ /about — 📌 О проекте\n"
+        "✅ /connect — 📞 Связаться с тобой\n"
+        "✅ /feedback — 💬 Оставить отзыв или задать вопрос\n"
+        "✅ /profile — 🏠 Личный кабинет\n"
+        "✅ /donate — 💰 Поддержать проект\n"
     )
+    await message.answer(text, parse_mode="Markdown")
 
 
 @router.message(Command("about"))
 async def about(message: Message):
-    await message.answer("About ...")
+    text = (
+        "📌 *О проекте*\n\n"
+        "Этот бот создан для помощи пользователям с AI, "
+        "а также для удобного взаимодействия через Telegram.\n\n"
+        "🔹 *Функционал:*\n"
+        "— Интеграция с AI\n"
+        "— Поддержка пользователей\n"
+        "— Прием донатов\n"
+        "— Расширенные возможности API\n\n"
+        "💡 Разработка: *Akrom Rustamov*"
+    )
+    await message.answer(text, parse_mode="Markdown")
 
 
 @router.message(Command("profile"))
 async def profile(message: Message):
-    await message.answer("Profile ...")
-
-
-@router.message(Command("feedback"))
-async def feedback(message: Message):
-    await message.answer("Feedback ...")
+    user = message.from_user
+    profile_text = (
+        f"👤 *Ваш профиль*\n"
+        f"👥 Имя: `{user.full_name}`\n"
+        f"🆔 ID: `{user.id}`\n"
+        f"📅 Дата регистрации: _заполнить из БД_\n"
+        f"💰 Баланс: _заполнить из БД_\n"
+        f"⭐ Статус: _Обычный пользователь или Суперпользователь_"
+    )
+    await message.answer(profile_text, parse_mode="Markdown")
 
 
 @router.message(Command("connect"))
 async def connect(message: Message):
-    await message.answer("Connect ...")
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="📩 Связаться в Telegram", url="https://t.me/AkromRustamov2007"
+                )
+            ]
+        ]
+    )
+    await message.answer(
+        "💬 Если у вас есть вопросы или предложения, свяжитесь со мной:",
+        reply_markup=keyboard,
+    )

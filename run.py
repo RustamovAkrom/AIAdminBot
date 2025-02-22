@@ -7,8 +7,15 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 
-from app.handlers import ai_router, base_router, payment_router
-from app.utils import set_bot_commands, set_bot_commands_for_language
+from app.handlers import (
+    ai_router,
+    base_router,
+    payment_router,
+    web_app_router,
+    feedback_router,
+)
+
+from app.utils import set_bot_commands
 
 
 async def main() -> None:
@@ -16,21 +23,17 @@ async def main() -> None:
 
     bot = Bot(
         token=str(os.getenv("TG_TOKEN")),
-        default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN)
+        default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN),
     )
     dp = Dispatcher()
 
     dp.include_router(base_router)
     dp.include_router(ai_router)
     dp.include_router(payment_router)
-    
-    bot_info = await bot.get_me()
-    language_code = bot_info.language_code if bot_info.language_code else "ru"
+    dp.include_router(web_app_router)
+    dp.include_router(feedback_router)
 
-    if language_code in ["en", "ru"]:
-        await set_bot_commands_for_language(bot, language_code)
-    else:
-        await set_bot_commands(bot)
+    await set_bot_commands(bot)
 
     try:
         logging.info("Бот запущен!")
@@ -43,7 +46,11 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", stream=sys.stdout)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        stream=sys.stdout,
+    )
 
     try:
         loop = asyncio.new_event_loop()

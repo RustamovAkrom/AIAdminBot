@@ -1,0 +1,7 @@
+Django
+djangorestframework
+google-generativeai
+pillow
+psycopg2-binary
+python-dotenv
+requests
