@@ -4,8 +4,8 @@ on:
   pull_request:
     types:
       [opened, closed, edited, ready_for_review, review_requested, reopened]
-  pull_request_review_comment:
-    types: [created]
+  pull_request_review:
+    types: [submitted]
   push:
     branches:
       - main
@@ -17,15 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Notification to Telegram
-        uses: ethyaan/tgate-action@v1.0.0  # Ensure you're using a stable and tested version
-        if: always()  # Ensures the notification runs regardless of job status
+        uses: appleboy/telegram-action@v0.1.0  # Надежная версия
         with:
-          token: ${{ secrets.TOKEN }}
           to: ${{ secrets.CHAT_ID }}
-          disable_web_page_preview: true  # Prevent previews for shared links
-          disable_notification: false     # Sends notification with sound
-          status: ${{ job.status }}
-          event: ${{ github.event_name }}
-          actor: ${{ github.actor }}
-          repository: ${{ github.repository }}
-          workflow: ${{ github.workflow }}
+          token: ${{ secrets.TOKEN }}
+          message: |
+            🔔 *GitHub Notification* 🔔
+            📌 *Repository:* ${{ github.repository }}
+            🏷 *Event:* ${{ github.event_name }}
+            🚀 *Actor:* ${{ github.actor }}
+            📝 *Branch:* ${{ github.ref }}
+            📄 *Commit:* ${{ github.sha }}

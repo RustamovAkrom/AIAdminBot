@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.static import serve
 
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from core.config.swagger import urlpatterns as swagger_patterns
 
 urlpatterns = (
@@ -18,6 +20,8 @@ urlpatterns = (
         path("ckeditor5/", include("django_ckeditor_5.urls")),
         path("rosetta/", include("rosetta.urls")),
         path("api/v1/", include("apps.bot.urls")),
+        path('api/v1/token/', TokenObtainPairView.as_view(), name="token_obtain_pair"),
+        path('api/v1/token/refresh/', TokenRefreshView.as_view(), name="token_refresh"),
         # Media and static files
         re_path(r"static/(?P<path>.*)", serve, {"document_root": settings.STATIC_ROOT}),
         re_path(r"media/(?P<path>.*)", serve, {"document_root": settings.MEDIA_ROOT}),

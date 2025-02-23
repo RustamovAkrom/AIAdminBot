@@ -128,3 +128,7 @@ TELEGRAM_TOKEN = os.getenv("TG_TOKEN")
 GOOGLE_AI_TOKEN = os.getenv("AI_TOKEN")
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+
+API_BASE_URL = "http://127.0.0.1:8000/api/v1/"
+USERNAME = os.getenv("USERNAME")
+PASSWORD = os.getenv("PASSWORD")
