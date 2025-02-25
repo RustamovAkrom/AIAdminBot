@@ -9,8 +9,8 @@ from apps.bot.serializers.users import TelegramUserSerializer
 class TelegramUserViewSet(viewsets.ModelViewSet):
     queryset = TelegramUser.objects.all()
     serializer_class = TelegramUserSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ["username", "telegram_id"]
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ["username", "telegram_id"]
     # permission_classes = [AllowAny]
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])

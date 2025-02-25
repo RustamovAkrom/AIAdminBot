@@ -20,10 +20,11 @@ async def run_bot() -> None:
         )
     dp = Dispatcher()
     
-    set_bot_commands(bot)
         
     register_all_handlers(dp)
 
+    set_bot_commands(bot)
+    
     try:
         logging.info("Бот запущен!")
         await dp.start_polling(bot)

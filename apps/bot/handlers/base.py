@@ -17,7 +17,15 @@ api_client = APIClient(settings.API_BASE_URL, token)
 async def start(message: Message):
     user = message.from_user
 
-    await api_client.users.create_user(user.id, user.full_name, user.username)
+    db_user = await api_client.users.get_user(user.id)
+    print(db_user)
+    # if db_user is None:
+    #     db_user = await api_client.users.create_user(user.id, user.full_name, user.username)
+    
+    # if not db_user.get("is_active", False):
+    #     await message.answer("🚫 Вам запрещён доступ к боту.")
+    #     return    print(db_user)
+
     await message.answer(f"Salom butga hush kelibsiz {message.from_user.full_name}")
 
 
