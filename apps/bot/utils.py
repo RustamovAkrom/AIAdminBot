@@ -1,5 +1,9 @@
+from django.conf import settings
+
 import aiohttp
-from aiogram import Bot
+from aiogram import Bot, Dispatcher
+from aiogram.enums import ParseMode
+from aiogram.client.default import DefaultBotProperties
 from aiogram.types import BotCommand, BotCommandScopeDefault, MenuButtonCommands
 
 from core import settings
@@ -33,3 +37,12 @@ async def set_bot_commands(bot: Bot):
 
     # Добавляем кнопки в главное меню Telegram
     await bot.set_chat_menu_button(menu_button=MenuButtonCommands())
+
+
+def run_bot() -> tuple[Bot, Dispatcher]:
+    bot = Bot(
+        token=str(settings.TELEGRAM_TOKEN),
+        default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN),
+    )
+    dp = Dispatcher()
+    return bot, dp

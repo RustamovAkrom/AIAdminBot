@@ -13,14 +13,12 @@ from django.core.management.base import BaseCommand
 from apps.bot.handlers import register_all_handlers
 from apps.bot.utils import set_bot_commands
 
-async def run_bot() -> None:
-    bot = Bot(
-            token=str(settings.TELEGRAM_TOKEN),
-            default=DefaultBotProperties(parse_mode=ParseMode.MARKDOWN),
-        )
-    dp = Dispatcher()
+from apps.bot.utils import run_bot
+
+
+async def main() -> None:
+    bot, dp = run_bot()
     
-        
     register_all_handlers(dp)
 
     set_bot_commands(bot)
@@ -48,7 +46,7 @@ class Command(BaseCommand):
         try:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            loop.run_until_complete(run_bot())
+            loop.run_until_complete(main())
         except KeyboardInterrupt:
             logging.info("Бот принудительно остановлен пользователем.")
         except Exception as e:

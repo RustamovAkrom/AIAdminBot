@@ -2,31 +2,20 @@ from core import settings
 from aiogram import Router
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command, CommandStart
-from apps.bot.api_client import APIClient
-# from apps.bot.utils import get_jwt_token
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.models import User
+from apps.bot.utils import run_bot
 
 
 router = Router()
 
-token = AccessToken.for_user(User.objects.get(username="Akromjon"))
-api_client = APIClient(settings.API_BASE_URL, token)
+OWNER_ID = 6572863564
 
 @router.message(CommandStart())
 async def start(message: Message):
     user = message.from_user
 
-    db_user = await api_client.users.get_user(user.id)
-    print(db_user)
-    # if db_user is None:
-    #     db_user = await api_client.users.create_user(user.id, user.full_name, user.username)
-    
-    # if not db_user.get("is_active", False):
-    #     await message.answer("🚫 Вам запрещён доступ к боту.")
-    #     return    print(db_user)
-
-    await message.answer(f"Salom butga hush kelibsiz {message.from_user.full_name}")
+    await message.answer(f"Salom butga hush kelibsiz {user.full_name}")
 
 
 @router.message(Command("help"))
@@ -63,29 +52,53 @@ async def about(message: Message):
 @router.message(Command("profile"))
 async def profile(message: Message):
     user = message.from_user
+    chat = await message.bot.get_chat(user.id)
+    
+    # Собираем всю доступную информацию о пользователе
     profile_text = (
         f"👤 *Ваш профиль*\n"
         f"👥 Имя: `{user.full_name}`\n"
         f"🆔 ID: `{user.id}`\n"
-        f"📅 Дата регистрации: _заполнить из БД_\n"
-        f"💰 Баланс: _заполнить из БД_\n"
-        f"⭐ Статус: _Обычный пользователь или Суперпользователь_"
+        f"🔗 Username: `@{user.username if user.username else 'Не указан'}`\n"
+        f"🌍 Язык: `{user.language_code}`\n"
+        f"🛠️ Premium: `{'Да' if user.is_premium else 'Нет'}`\n"
+        f"📱 Телефон: `{'Не доступен через Telegram API'}`\n"
+        f"🔒 Приватность: `{'Да' if chat.has_private_forwards else 'Нет'}`\n"
+        # f"✅ Верифицирован: `{'Да' if chat.is_verified else 'Нет'}`\n"
+        f"🏷️ Bio: `{chat.bio if chat.bio else 'Не указано'}`\n"
+        f"🔹 Тип чата: `{chat.type}`\n"
+        f"`{chat.location}`"
+        # f"👑 Статус администратора: `{'Да' if chat.is_creator else 'Нет'}`"
     )
-    await message.answer(profile_text, parse_mode="Markdown")
+    
+    await message.answer(profile_text)
+
+
+async def get_owner_username():
+    bot, _ = run_bot()
+    user_info = await bot.get_chat(OWNER_ID)
+    return user_info.username
 
 
 @router.message(Command("connect"))
 async def connect(message: Message):
-    keyboard = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [
-                InlineKeyboardButton(
-                    text="📩 Связаться в Telegram", url="https://t.me/AkromRustamov2007"
-                )
+    username = await get_owner_username()
+
+    if username:
+        keyboard = InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text="📩 Связаться в Telegram", 
+                        url=f"https://t.me/{username}"
+                    )
+                ]
             ]
-        ]
-    )
-    await message.answer(
-        "💬 Если у вас есть вопросы или предложения, свяжитесь со мной:",
-        reply_markup=keyboard,
-    )
+        )
+
+        await message.answer(
+            "💬 Если у вас есть вопросы или предложения, свяжитесь со мной:",
+            reply_markup=keyboard,
+        )
+    else:
+        await message.answer("У владельца нет username 😅")

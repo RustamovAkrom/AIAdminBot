@@ -1,18 +1,15 @@
 import os
 import aiofiles
 import asyncio
+from django.conf import settings
 import google.generativeai as genai
-from dotenv import load_dotenv
 from collections import deque, defaultdict
 from PIL import Image
 import mimetypes
 
 
-load_dotenv()
-
-GOOGLE_API_KEY = os.getenv("AI_TOKEN")
-
 MAX_FILE_SIZE = 10 * 1024 * 1024
+
 
 AI_CONFIG = {
     "model": "gemini-1.5-flash",
@@ -21,10 +18,11 @@ AI_CONFIG = {
     "role": "Ты полезный ассистент, который отвечает кратко и по делу.",
 }
 
-if not GOOGLE_API_KEY:
+if not settings.GOOGLE_AI_TOKEN:
     raise ValueError("❌ API-ключ не найден! Проверь .env файл.")
 
-genai.configure(api_key=GOOGLE_API_KEY)
+
+genai.configure(api_key=settings.GOOGLE_AI_TOKEN)
 model = genai.GenerativeModel(AI_CONFIG["model"])
 
 user_chat_history = defaultdict(lambda: deque(maxlen=10))
