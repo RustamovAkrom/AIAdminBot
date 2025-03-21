@@ -6,6 +6,8 @@ import traceback
 import functools
 
 
+api = users.UsersService()
+
 def error_handler(func):
     bot, _ = run_bot()
 
@@ -22,16 +24,6 @@ def error_handler(func):
             if message:
                 await message.answer("⚠️ Произошла ошибка! Мы уже работаем над этим.")
             
-            # await bot.send_message(settings.TELEGRAM_ADMIN_ID, error_text)
+            await bot.send_message(settings.TELEGRAM_ADMIN_ID, error_text)
 
-    return wrapper
-
-
-def is_active_user(func):
-    async def wrapper(message: types.Message, *args, **kwargs):
-        user_data = users.get_user(message.from_user.id)
-        if user_data and user_data.get("is_active"):
-            return await func(message, *args, **kwargs)
-        else:
-            await message.answer("❌ Ваша учетная запись деактивирована. Обратитесь к администратору.")
     return wrapper

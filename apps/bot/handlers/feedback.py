@@ -2,9 +2,10 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-
+from apps.bot.services import feedback
 
 router = Router()
+api_feedback = feedback.FeedbackService()
 
 
 class FeedbackForm(StatesGroup):
@@ -21,6 +22,12 @@ async def feedback_start(message: types.Message, state: FSMContext):
 
 @router.message(FeedbackForm.waiting_for_feedback)
 async def feedback_received(message: types.Message, state: FSMContext):
-    # Здесь можно добавить сохранение отзыва в базу Django
-    await message.answer("✅ Спасибо за ваш отзыв! Он очень важен для меня.")
+    user_id = message.from_user.id
+    feedback_message = message.text
+
+    if api_feedback.create_feedback(user_id, feedback_message):
+        await message.answer("✅ Спасибо за ваш отзыв! Он отправлен!")
+    else:
+        await message.answer("❌ Произошла ошибка при отправке отзыва.")
+
     await state.clear()
