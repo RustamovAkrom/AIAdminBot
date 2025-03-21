@@ -19,7 +19,7 @@ else:
     DEBUG = False
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split(",")
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost").split(",")
 
 INSTALLED_APPS = THIRD_PARTY_APPS + DEFAULT_APPS + PROJECT_APPS
 
@@ -130,7 +130,8 @@ GOOGLE_AI_TOKEN = os.getenv("AI_TOKEN") # Google AI Token
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY") # Stripe Payment Secret Key
 
-API_BASE_URL = "http://127.0.0.1:8000/api/v1/" # Base project url path to api
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000/api/v1/") # Base project url path to api
 
 USERNAME = os.getenv("USERNAME")
 PASSWORD = os.getenv("PASSWORD")
+
