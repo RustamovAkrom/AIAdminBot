@@ -5,17 +5,49 @@ from aiogram.filters import Command, CommandStart
 from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.models import User
 from apps.bot.utils import run_bot
+from apps.bot.decorators import error_handler, is_active_user
+from apps.bot.services import users
+
+import requests
 
 
 router = Router()
 
-OWNER_ID = 6572863564
+OWNER_ID = settings.TELEGRAM_ADMIN_ID
+
+BASE_URL = lambda path: f"http://127.0.0.1:8000/api/v1/{path}"
+
 
 @router.message(CommandStart())
+@is_active_user
+@error_handler
 async def start(message: Message):
     user = message.from_user
+    
+    data = {
+        "telegram_id": user.id,
+        "full_name": user.full_name,
+        "username": user.username
+    }
 
-    await message.answer(f"Salom butga hush kelibsiz {user.full_name}")
+    status, response = users.create_user(data)
+
+    if status == 201:
+        await message.answer(
+            f"👋 Salom, {user.full_name}! Universal Telegram BOTga hush kelibsiz!\n\n"
+            "💡 Qanday yordam berishim mumkin?"
+        )    
+    elif status == 400:
+        status, user_data = users.get_user(user.id)
+        if status == 200:
+            await message.answer(
+                f"👋 Salom, {user_data.get('full_name', 'Foydalanuvchi')}!\n\n"
+                "✨ Siz oldin ro'yhatdan o'tgansiz. Yana qanday yordam kerak?"
+            )
+        else:
+            await message.answer("⚠️ Foydalanuvchi ma'lumotlarini olishda muammo.")
+    else:
+        await message.answer("⚠️ Ma'lumotlarni saqlashda xatolik yuz berdi.")
 
 
 @router.message(Command("help"))

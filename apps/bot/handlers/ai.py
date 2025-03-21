@@ -23,8 +23,10 @@ class AIState(StatesGroup):
 @router.message(Command("ai"))
 async def cmd_ai(message: Message, state: FSMContext):
     await state.set_state(AIState.active)
-    await message.answer("🤖 AI режим активирован! Отправьте текст или фото.")
-    await message.answer("Для отключения AI-режима введите команду /exit.")
+    await message.answer(
+        "🤖 AI режим активирован! Отправьте текст или фото.\n"
+        "Для отключения AI-режима введите команду /exit.\n"
+    )
 
 
 # Deactivate AI mode

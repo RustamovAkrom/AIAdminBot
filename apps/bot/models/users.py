@@ -9,7 +9,6 @@ class TelegramUser(AbstractBaseModel):
     full_name = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Full Name"))
     is_superuser = models.BooleanField(default=False, verbose_name=_("Superuser"))
     is_active = models.BooleanField(default=True, verbose_name=_("Active"))
-    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = _("Telegram User")
