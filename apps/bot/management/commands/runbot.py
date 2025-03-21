@@ -3,12 +3,9 @@ import logging
 import os
 import sys
 
-from aiogram.client.default import DefaultBotProperties
-from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.core.management import call_command
 
 from apps.bot.handlers import register_all_handlers
 from apps.bot.utils import set_bot_commands
