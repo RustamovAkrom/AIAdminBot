@@ -20,7 +20,6 @@ BASE_URL = lambda path: f"http://127.0.0.1:8000/api/v1/{path}"
 
 @router.message(CommandStart())
 @is_active_user
-@error_handler
 async def start(message: Message):
     user = message.from_user
     
