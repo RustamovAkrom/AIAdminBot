@@ -18,7 +18,7 @@ async def main() -> None:
     
     register_all_handlers(dp)
 
-    set_bot_commands(bot)
+    await set_bot_commands(bot)
     
     try:
         logging.info("Бот запущен!")

@@ -15,11 +15,8 @@ router = Router()
 
 OWNER_ID = settings.TELEGRAM_ADMIN_ID
 
-BASE_URL = lambda path: f"http://127.0.0.1:8000/api/v1/{path}"
-
 
 @router.message(CommandStart())
-@is_active_user
 async def start(message: Message):
     user = message.from_user
     
