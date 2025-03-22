@@ -6,6 +6,9 @@ from dotenv import load_dotenv, find_dotenv
 
 from core.config import *  # noqa
 
+import dj_database_url
+
+
 load_dotenv(find_dotenv(".env"))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,16 +68,25 @@ ASGI_APPLICATION = "core.asgi.application"
 #     }
 # }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("POSTGRES_DB"),
+#         "USER": os.getenv("POSTGRES_USER"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#         "HOST": os.getenv("POSTGRES_HOST"),
+#         "PORT": os.getenv("POSTGRES_PORT"),
+#     }
+# }
+
+import dj_database_url
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST"),
-        "PORT": os.getenv("POSTGRES_PORT"),
-    }
+    "default": dj_database_url.config(
+        default="postgresql://postgres:QTKlnXFdHxCqUksyqfmtkJXghcWGgJaH@postgres.railway.internal:5432/railway"
+    )
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
