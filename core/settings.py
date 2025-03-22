@@ -10,9 +10,10 @@ load_dotenv(find_dotenv(".env"))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = str(os.getenv("SECRET_KEY"))
 
 DEBUG = os.getenv("DEBUG")
+
 if DEBUG is not None:
     DEBUG = DEBUG.lower() in ["true", "1"]
 else:
