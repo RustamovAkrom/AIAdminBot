@@ -1,5 +1,6 @@
 import os
 import logging
+from django.conf import settings
 from dotenv import load_dotenv
 from aiogram import types, Router, F
 from aiogram.filters import Command
@@ -8,12 +9,16 @@ from aiogram.types import (
     InlineKeyboardButton,
     CallbackQuery,
 )
+from apps.bot.services import payments
+
 import stripe
 
 
 load_dotenv()
 
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_SECRET_KEY = settings.STRIPE_SECRET_KEY
+api_payments = payments.PaymentService()
+
 stripe.api_key = STRIPE_SECRET_KEY
 
 
@@ -137,6 +142,9 @@ async def create_payment(
                 f"Вы выбрали донат на **{amount} {currency}**.\nПерейдите по ссылке для оплаты:",
                 reply_markup=donate_keyboard,
             )
+            # Save payment to database
+            api_payments.create_payment(user_id, amount, currency, status="pending")
+
         else:
             await message.answer(
                 "❌ Ошибка при создании платежной сессии. Попробуйте позже."

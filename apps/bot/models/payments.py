@@ -24,5 +24,13 @@ class Payment(AbstractBaseModel):
         db_table = "payments"
         ordering = ["-created_at"]
 
+    def mark_as_paid(self):
+        self.status = self.StatusChoices.PAID
+        self.save(update_fields=['status'])
+
+    @property
+    def is_sucessful(self):
+        return self.status == self.StatusChoices.PAID
+
     def __str__(self):
         return f"Payment {self.amount} {self.currency} - {self.status}"

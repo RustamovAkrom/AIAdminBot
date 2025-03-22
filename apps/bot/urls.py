@@ -5,6 +5,7 @@ from .views import (
     AIChatHistoryViewSet,
     PaymentViewSet,
     FeedbackViewSet,
+    stripe_webhook
 )
 
 router = DefaultRouter()
@@ -13,4 +14,7 @@ router.register(r"ai_chat_history", AIChatHistoryViewSet)
 router.register(r"payments", PaymentViewSet)
 router.register(r"feedback", FeedbackViewSet)
 
-urlpatterns = [path("bot/", include(router.urls))]
+urlpatterns = [
+    path("bot/", include(router.urls)),
+    path("bot/webhook/", stripe_webhook, name="stripe_webhook"),
+]

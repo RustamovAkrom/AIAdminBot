@@ -129,9 +129,9 @@ TELEGRAM_ADMIN_ID = 6572863564 # Your Telegram ID
 GOOGLE_AI_TOKEN = os.getenv("AI_TOKEN") # Google AI Token 
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY") # Stripe Payment Secret Key
+STRIPE_WEBHOOK_KEY = os.getenv("STRIPE_WEBHOOK_KEY") # Stripe Webhook Secret Key
 
 API_BASE_URL = str(os.getenv("API_BASE_URL")) # Base project url path to api
 
-USERNAME = os.getenv("USERNAME")
-PASSWORD = os.getenv("PASSWORD")
-
+USERNAME = str(os.getenv("USERNAME"))
+PASSWORD = str(os.getenv("PASSWORD"))

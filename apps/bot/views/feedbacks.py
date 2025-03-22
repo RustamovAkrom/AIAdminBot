@@ -1,5 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
 from apps.bot.models.feedback import Feedback
 from apps.bot.models.users import TelegramUser
 from apps.bot.serializers.feedbacks import FeedbackSerializer
@@ -8,6 +10,7 @@ from apps.bot.serializers.feedbacks import FeedbackSerializer
 class FeedbackViewSet(viewsets.ModelViewSet):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         telegram_id = request.data.get("telegram_id")

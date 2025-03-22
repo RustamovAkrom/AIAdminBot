@@ -11,7 +11,7 @@ class TelegramUserViewSet(viewsets.ModelViewSet):
     serializer_class = TelegramUserSerializer
     # filter_backends = [filters.SearchFilter]
     # search_fields = ["username", "telegram_id"]
-    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
     def block(self, request, pk=None):
