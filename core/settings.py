@@ -123,15 +123,15 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 LOCALE_MIDDLEWARE_EXCLUDED_PATHS = ["/media/", "/static/"]
 
-TELEGRAM_TOKEN = os.getenv("TG_TOKEN") # Telegram BOT Token
-TELEGRAM_ADMIN_ID = 6572863564 # Your Telegram ID 
+TELEGRAM_TOKEN = os.getenv("TG_TOKEN")  # Telegram BOT Token
+TELEGRAM_ADMIN_ID = 6572863564  # Your Telegram ID
 
-GOOGLE_AI_TOKEN = os.getenv("AI_TOKEN") # Google AI Token 
+GOOGLE_AI_TOKEN = os.getenv("AI_TOKEN")  # Google AI Token
 
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY") # Stripe Payment Secret Key
-STRIPE_WEBHOOK_KEY = os.getenv("STRIPE_WEBHOOK_KEY") # Stripe Webhook Secret Key
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")  # Stripe Payment Secret Key
+STRIPE_WEBHOOK_KEY = os.getenv("STRIPE_WEBHOOK_KEY")  # Stripe Webhook Secret Key
 
-API_BASE_URL = str(os.getenv("API_BASE_URL")) # Base project url path to api
+API_BASE_URL = str(os.getenv("API_BASE_URL"))  # Base project url path to api
 
 USERNAME = str(os.getenv("USERNAME"))
 PASSWORD = str(os.getenv("PASSWORD"))

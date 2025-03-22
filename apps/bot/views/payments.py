@@ -17,7 +17,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
         user_id = self.request.query_params.get("user")
         return Payment.objects.filter(user__telegram_id=user_id)
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=["post"])
     def create_payment(self, request):
         telegram_id = request.data.get("telegram_id")
         amount = request.data.get("amount")
@@ -27,8 +27,10 @@ class PaymentViewSet(viewsets.ModelViewSet):
         try:
             user = TelegramUser.objects.get(telegram_id=telegram_id)
         except TelegramUser.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
         payment = Payment.objects.create(
             user=user,
             amount=amount,

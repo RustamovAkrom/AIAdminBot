@@ -5,8 +5,12 @@ from apps.shared.models.base import AbstractBaseModel
 
 class TelegramUser(AbstractBaseModel):
     telegram_id = models.BigIntegerField(unique=True, verbose_name=_("Telegram ID"))
-    username = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Username"))
-    full_name = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Full Name"))
+    username = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_("Username")
+    )
+    full_name = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_("Full Name")
+    )
     is_superuser = models.BooleanField(default=False, verbose_name=_("Superuser"))
     is_active = models.BooleanField(default=True, verbose_name=_("Active"))
 

@@ -10,27 +10,29 @@ import stripe
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
     endpoint_secret = settings.STRIPE_SECRET_KEY
 
     try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
 
-        if event['type'] == 'checkout.session.completed':
-            session = event['data']['object']
-            telegram_id = session.get('metadata', {}).get('telegram_id')
-            amount = session.get('amount_total') / 100
+        if event["type"] == "checkout.session.completed":
+            session = event["data"]["object"]
+            telegram_id = session.get("metadata", {}).get("telegram_id")
+            amount = session.get("amount_total") / 100
 
-            Payment.objects.filter(telegram_id=telegram_id, amount=amount).update(status='paid')
+            Payment.objects.filter(telegram_id=telegram_id, amount=amount).update(
+                status="paid"
+            )
 
-        elif event['type'] == 'checkout.session.expired':
-            session = event['data']['object']
-            telegram_id = session.get('metadata', {}).get('telegram_id')
-            amount = session.get('amount_total') / 100
+        elif event["type"] == "checkout.session.expired":
+            session = event["data"]["object"]
+            telegram_id = session.get("metadata", {}).get("telegram_id")
+            amount = session.get("amount_total") / 100
 
-            Payment.objects.filter(telegram_id=telegram_id, amount=amount).update(status="failed")
+            Payment.objects.filter(telegram_id=telegram_id, amount=amount).update(
+                status="failed"
+            )
 
     except Exception as e:
         print("Error Webhook: ", e)

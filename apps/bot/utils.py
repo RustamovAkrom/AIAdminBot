@@ -11,16 +11,13 @@ from core import settings
 
 def get_jwt_token(username: str, password: str) -> dict[str, str]:
     url = f"{settings.API_BASE_URL}/token/"
-    data = {
-        "username": username,
-        "password": password
-    }
+    data = {"username": username, "password": password}
     response = requests.post(url, json=data)
 
     if response.status_code == 200:
         return response.json()
-    
-     # Логируем ошибку и возвращаем пустой словарь
+
+    # Логируем ошибку и возвращаем пустой словарь
     print(f"Ошибка авторизации: {response.status_code} - {response.text}")
     return {}
 

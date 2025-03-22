@@ -7,6 +7,6 @@ class PaymentService(APIClient):
             "telegram_id": telegram_id,
             "amount": amount,
             "currency": currency,
-            "status": status
+            "status": status,
         }
         self._request("POST", "bot/payments/", data)

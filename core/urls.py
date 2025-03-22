@@ -20,8 +20,8 @@ urlpatterns = (
         path("ckeditor5/", include("django_ckeditor_5.urls")),
         path("rosetta/", include("rosetta.urls")),
         path("api/v1/", include("apps.bot.urls")),
-        path('api/v1/token/', TokenObtainPairView.as_view(), name="token_obtain_pair"),
-        path('api/v1/token/refresh/', TokenRefreshView.as_view(), name="token_refresh"),
+        path("api/v1/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+        path("api/v1/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
         # Media and static files
         re_path(r"static/(?P<path>.*)", serve, {"document_root": settings.STATIC_ROOT}),
         re_path(r"media/(?P<path>.*)", serve, {"document_root": settings.MEDIA_ROOT}),

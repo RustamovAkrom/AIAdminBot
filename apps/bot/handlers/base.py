@@ -20,19 +20,20 @@ OWNER_ID = settings.TELEGRAM_ADMIN_ID
 @router.message(CommandStart())
 async def start(message: Message):
     user = message.from_user
-    
+
     data = {
         "telegram_id": user.id,
         "full_name": user.full_name,
-        "username": user.username
+        "username": user.username,
     }
 
     status, user_data = api_users.create_user(data)
 
     if status is None:
-        await message.answer("⚠️ API bilan bog'lanishda muammo yuz berdi. Keyinroq urinib ko'ring.")
+        await message.answer(
+            "⚠️ API bilan bog'lanishda muammo yuz berdi. Keyinroq urinib ko'ring."
+        )
 
-    
     await message.answer(
         f"👋 Salom, {user.full_name}! Qanday yordam berishim munkin?\n\n"
     )
@@ -73,7 +74,7 @@ async def about(message: Message):
 async def profile(message: Message):
     user = message.from_user
     chat = await message.bot.get_chat(user.id)
-    
+
     # Собираем всю доступную информацию о пользователе
     profile_text = (
         f"👤 *Ваш профиль*\n"
@@ -90,7 +91,7 @@ async def profile(message: Message):
         f"`{chat.location}`"
         # f"👑 Статус администратора: `{'Да' if chat.is_creator else 'Нет'}`"
     )
-    
+
     await message.answer(profile_text)
 
 
@@ -109,8 +110,7 @@ async def connect(message: Message):
             inline_keyboard=[
                 [
                     InlineKeyboardButton(
-                        text="📩 Связаться в Telegram", 
-                        url=f"https://t.me/{username}"
+                        text="📩 Связаться в Telegram", url=f"https://t.me/{username}"
                     )
                 ]
             ]

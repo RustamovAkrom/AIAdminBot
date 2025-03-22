@@ -10,4 +10,3 @@ def register_all_handlers(dp: Dispatcher):
     dp.include_router(ai_router)
     dp.include_router(feedback_router)
     dp.include_router(payment_router)
-    

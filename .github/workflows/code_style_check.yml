@@ -1,0 +1,29 @@
+name: Code Style Check with Black
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  black-check:
+    name: Run Black code style check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11" # Укажи свою версию Python
+
+      - name: Install Black
+        run: pip install black
+
+      - name: Run Black
+        run: black --check --diff .

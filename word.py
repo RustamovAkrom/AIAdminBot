@@ -11,6 +11,7 @@ from apps.bot.utils import get_jwt_token
 
 import requests
 
+
 async def main():
     result = get_jwt_token(settings.USERNAME, settings.PASSWORD)
 
@@ -25,6 +26,7 @@ async def main():
     # response = requests.post(url, json=data)
     # print(response.status_code)
     # print(await get_jwt_token("Akromjon", "2007"))
-          
-if __name__=='__main__':
+
+
+if __name__ == "__main__":
     asyncio.run(main())

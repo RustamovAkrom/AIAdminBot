@@ -20,13 +20,10 @@ class FeedbackViewSet(viewsets.ModelViewSet):
         except TelegramUser.DoesNotExist:
             return Response(
                 {"error": "User with this telegram_id not found"},
-                status=status.HTTP_404_NOT_FOUND
+                status=status.HTTP_404_NOT_FOUND,
             )
-        
-        feedback_data = {
-            "user": user.id,
-            "message": request.data.get("message")
-        }
+
+        feedback_data = {"user": user.id, "message": request.data.get("message")}
 
         serializer = self.get_serializer(data=feedback_data)
         serializer.is_valid(raise_exception=True)

@@ -5,7 +5,7 @@ from .views import (
     AIChatHistoryViewSet,
     PaymentViewSet,
     FeedbackViewSet,
-    stripe_webhook
+    stripe_webhook,
 )
 
 router = DefaultRouter()

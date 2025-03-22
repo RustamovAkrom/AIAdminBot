@@ -15,11 +15,11 @@ from apps.bot.utils import run_bot
 
 async def main() -> None:
     bot, dp = run_bot()
-    
+
     register_all_handlers(dp)
 
     await set_bot_commands(bot)
-    
+
     try:
         logging.info("Бот запущен!")
         await dp.start_polling(bot)

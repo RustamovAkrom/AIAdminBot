@@ -22,6 +22,10 @@ class Command(BaseCommand):
                 email=email,
                 password=password,
             )
-            self.stdout.write(self.style.SUCCESS(f"✅ Суперпользователь {username} создан!"))
+            self.stdout.write(
+                self.style.SUCCESS(f"✅ Суперпользователь {username} создан!")
+            )
         else:
-            self.stdout.write(self.style.WARNING(f"⚡ Суперпользователь {username} уже существует."))
+            self.stdout.write(
+                self.style.WARNING(f"⚡ Суперпользователь {username} уже существует.")
+            )

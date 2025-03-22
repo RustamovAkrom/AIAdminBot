@@ -6,13 +6,16 @@ logger = logging.getLogger(__name__)
 
 
 class BaseAPI:
-    """ Базовый класс для работы с API (общие методы) """
+    """Базовый класс для работы с API (общие методы)"""
+
     def __init__(self, client: "APIClient", endpoint: str):
         self.client = client
         self.endpoint = endpoint
 
-    async def _request(self, method: str, path: str = "", data: Optional[Dict[str, Any]] = None):
-        """ Универсальный метод запроса """
+    async def _request(
+        self, method: str, path: str = "", data: Optional[Dict[str, Any]] = None
+    ):
+        """Универсальный метод запроса"""
         url = f"{self.client.base_url}{self.endpoint}{path}"
         async with aiohttp.ClientSession(headers=self.client.headers) as session:
             async with session.request(method, url, json=data) as response:
@@ -23,7 +26,8 @@ class BaseAPI:
 
 
 class UserAPI(BaseAPI):
-    """ API для работы с пользователями """
+    """API для работы с пользователями"""
+
     def __init__(self, client: "APIClient"):
         super().__init__(client, "bot/telegram_users")
 
@@ -31,7 +35,11 @@ class UserAPI(BaseAPI):
         return await self._request("GET", f"/{telegram_id}/")
 
     async def create_user(self, telegram_id: int, full_name: str, username: str):
-        data = {"telegram_id": telegram_id, "full_name": full_name, "username": username}
+        data = {
+            "telegram_id": telegram_id,
+            "full_name": full_name,
+            "username": username,
+        }
         return await self._request("POST", "/", data)
 
     async def update_user(self, telegram_id: int, data: Dict[str, Any]):
@@ -46,7 +54,8 @@ class UserAPI(BaseAPI):
 
 
 class AIChatAPI(BaseAPI):
-    """ API для работы с AI-чатом """
+    """API для работы с AI-чатом"""
+
     def __init__(self, client: "APIClient"):
         super().__init__(client, "bot/ai_chat_history")
 
@@ -59,7 +68,8 @@ class AIChatAPI(BaseAPI):
 
 
 class PaymentAPI(BaseAPI):
-    """ API для управления платежами """
+    """API для управления платежами"""
+
     def __init__(self, client: "APIClient"):
         super().__init__(client, "bot/payments")
 
@@ -72,10 +82,14 @@ class PaymentAPI(BaseAPI):
 
 
 class APIClient:
-    """ Основной клиент API (агрегатор всех API) """
+    """Основной клиент API (агрегатор всех API)"""
+
     def __init__(self, base_url: str, token: str):
         self.base_url = base_url
-        self.headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+        self.headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        }
 
         # Подключаем API-модули
         self.users = UserAPI(self)

@@ -26,7 +26,7 @@ class Payment(AbstractBaseModel):
 
     def mark_as_paid(self):
         self.status = self.StatusChoices.PAID
-        self.save(update_fields=['status'])
+        self.save(update_fields=["status"])
 
     @property
     def is_sucessful(self):

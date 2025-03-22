@@ -13,14 +13,14 @@ class TelegramUserViewSet(viewsets.ModelViewSet):
     # search_fields = ["username", "telegram_id"]
     permission_classes = [IsAuthenticated]
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    @action(detail=True, methods=["post"], permission_classes=[IsAdminUser])
     def block(self, request, pk=None):
         user = self.get_object()
         user.is_active = False
         user.save()
         return Response({"message": f"Пользователь {user.telegram_id} заблокирован"})
 
-    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
+    @action(detail=True, methods=["post"], permission_classes=[IsAdminUser])
     def unblock(self, request, pk=None):
         user = self.get_object()
         user.is_active = True
