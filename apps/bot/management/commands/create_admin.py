@@ -1,5 +1,4 @@
 import os
-from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from dotenv import load_dotenv
@@ -17,7 +16,7 @@ class Command(BaseCommand):
         password = os.getenv("PASSWORD", "admin")
 
         if not User.objects.filter(username=username).exists():
-            user = User.objects.create_superuser(
+            User.objects.create_superuser(
                 username=username,
                 email=email,
                 password=password,

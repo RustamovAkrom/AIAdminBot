@@ -2,13 +2,8 @@ from core import settings
 from aiogram import Router
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command, CommandStart
-from rest_framework_simplejwt.tokens import AccessToken
-from django.contrib.auth.models import User
 from apps.bot.utils import run_bot
-from apps.bot.decorators import error_handler
 from apps.bot.services import users
-
-import requests
 
 
 router = Router()

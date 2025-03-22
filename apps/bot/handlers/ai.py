@@ -81,7 +81,7 @@ async def handle_ai_photo(message: Message, bot: Bot):
 
 # Recognize AI photo
 @router.message(AIState.active, F.video)
-async def handle_ai_photo(message: Message, bot: Bot):
+async def handle_ai_video(message: Message, bot: Bot):
     user_id = message.from_user.id
 
     video: Video = message.video
@@ -108,7 +108,7 @@ async def handle_ai_photo(message: Message, bot: Bot):
 
 # Recognize AI document
 @router.message(AIState.active, F.document)
-async def handle_ai_video(message: Message, bot: Bot):
+async def handle_ai_document(message: Message, bot: Bot):
     user_id = message.from_user.id
 
     video: Document = message.document

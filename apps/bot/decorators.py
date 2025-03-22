@@ -19,7 +19,7 @@ def error_handler(func):
                 *args,
                 **{k: v for k, v in kwargs.items() if k in func.__code__.co_varnames},
             )
-        except Exception as e:
+        except Exception:
             message = next(
                 (arg for arg in args if isinstance(arg, types.Message)), None
             )

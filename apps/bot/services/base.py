@@ -50,7 +50,7 @@ class APIClient:
 
             try:
                 data = response.json()
-            except:
+            except Exception:
                 data = None
 
             return response.status_code, data

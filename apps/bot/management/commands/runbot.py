@@ -1,11 +1,8 @@
 import asyncio
 import logging
-import os
 import sys
 
-from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.core.management import call_command
 
 from apps.bot.handlers import register_all_handlers
 from apps.bot.utils import set_bot_commands

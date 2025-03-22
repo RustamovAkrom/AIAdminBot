@@ -1,4 +1,3 @@
-import os
 import logging
 from django.conf import settings
 from dotenv import load_dotenv
@@ -133,13 +132,14 @@ async def create_payment(
                         InlineKeyboardButton(
                             text=f"💳 Оплатить {amount} {currency}",
                             url=session.url,
-                            # web_app=WebAppInfo(url=session.url) # Открывает URL в Telegram Web App
+                            # web_app=WebAppInfo(url=session.url)
                         )
                     ]
                 ]
             )
             await message.answer(
-                f"Вы выбрали донат на **{amount} {currency}**.\nПерейдите по ссылке для оплаты:",
+                f"Вы выбрали донат на **{amount} {currency}**.\n"
+                "Перейдите по ссылке для оплаты:",
                 reply_markup=donate_keyboard,
             )
             # Save payment to database

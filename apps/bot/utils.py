@@ -1,12 +1,11 @@
 from django.conf import settings
 
-import requests
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.types import BotCommand, BotCommandScopeDefault, MenuButtonCommands
 
-from core import settings
+import requests
 
 
 def get_jwt_token(username: str, password: str) -> dict[str, str]:
