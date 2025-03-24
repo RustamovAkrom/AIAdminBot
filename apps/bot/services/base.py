@@ -1,5 +1,3 @@
-import logging
-
 from django.conf import settings
 
 from apps.bot.utils import get_jwt_token
@@ -24,20 +22,20 @@ class APIClient:
         return tokens
 
     def refresh_token(self):
-        refresh_token = self.tokens.get('refresh')
+        refresh_token = self.tokens.get("refresh")
         if not refresh_token:
             print("❌ Отсутствует refresh токен, получаю новые токены!")
             self.tokens = self.get_tokens()
-            self.headers['Authorization'] = f"Bearer {self.tokens['access']}"
+            self.headers["Authorization"] = f"Bearer {self.tokens['access']}"
             return
-        
+
         response = requests.post(
             f"{self.base_url}/api/v1/token/refresh",
             json={"refresh": refresh_token},
         )
         if response.status_code == 200:
-            self.tokens['access'] = response.json().get("access")
-            self.headers['Authorization'] = f"Bearer {self.tokens['access']}"
+            self.tokens["access"] = response.json().get("access")
+            self.headers["Authorization"] = f"Bearer {self.tokens['access']}"
             print("🔄 Токен успешно обновлён!")
         else:
             print("❌ Не удалось обновить токен, получаю новые токены!")

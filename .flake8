@@ -4,5 +4,6 @@ exclude =
     __pycache__,
     .venv,
     migrations,
-    settings.py
+    settings.py,
+    word.py
 max-line-length = 88

@@ -3,7 +3,7 @@ import re
 
 import openai
 from aiogram import Router, F, Bot
-from aiogram.types import Message, PhotoSize, Video, Document
+from aiogram.types import Message, PhotoSize, Document
 from aiogram.filters import Command
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
@@ -37,7 +37,7 @@ async def send_ai_response(bot, chat_id, text):
     text = escape_markdown(text)
 
     # Делим текст на части по 4096 символов (лимит Telegram)
-    chunks = [text[i:i + 4096] for i in range(0, len(text), 4096)]
+    chunks = [text[i: i + 4096] for i in range(0, len(text), 4096)]
 
     for chunk in chunks:
         try:
@@ -50,6 +50,7 @@ async def send_ai_response(bot, chat_id, text):
                 await bot.send_message(chat_id=chat_id, text=chunk)
             except Exception as e:
                 print(f"❌ Критическая ошибка отправки: {e}")
+
 
 # Activate AI mode
 @router.message(Command("ai"))
@@ -81,9 +82,11 @@ async def handle_ai_text(message: Message, bot: Bot):
     response = await ask_gemini(user_id, message.text)
 
     await processing_msg.delete()
-    
+
     MAX_LENGTH = 4096
-    for chunk in [response[i: i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)]:
+    for chunk in [
+        response[i:i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)
+    ]:
         await bot.send_chat_action(message.chat.id, "typing")
         # await message.answer(escape_markdown(chunk))
         await send_ai_response(message.bot, message.chat.id, chunk)
@@ -112,7 +115,9 @@ async def handle_ai_photo(message: Message, bot: Bot):
     await processing_msg.delete()
 
     MAX_LENGTH = 4096
-    for chunk in [response[i: i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)]:
+    for chunk in [
+        response[i:i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)
+    ]:
         await bot.send_chat_action(message.chat.id, "typing")
         await message.answer(chunk)
 
@@ -142,7 +147,9 @@ async def handle_ai_document(message: Message, bot: Bot):
     await processing_msg.delete()
 
     MAX_LENGTH = 4096
-    for chunk in [response[i: i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)]:
+    for chunk in [
+        response[i:i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)
+    ]:
         await bot.send_chat_action(message.chat.id, "typing")
         await message.answer(chunk)
 
