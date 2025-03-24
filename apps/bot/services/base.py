@@ -1,3 +1,5 @@
+import logging
+
 from django.conf import settings
 
 from apps.bot.utils import get_jwt_token
@@ -22,31 +24,38 @@ class APIClient:
         return tokens
 
     def refresh_token(self):
-        refresh_token = self.tokens.get("refresh")
+        refresh_token = self.tokens.get('refresh')
         if not refresh_token:
-            raise Exception("Отсутствует refresh токен.")
-
+            print("❌ Отсутствует refresh токен, получаю новые токены!")
+            self.tokens = self.get_tokens()
+            self.headers['Authorization'] = f"Bearer {self.tokens['access']}"
+            return
+        
         response = requests.post(
-            f"{settings.API_BASE_URL}/api/v1/token/refresh/",
+            f"{self.base_url}/api/v1/token/refresh",
             json={"refresh": refresh_token},
         )
         if response.status_code == 200:
-            self.tokens["access"] = response.json().get("access")
-            self.headers["Authorization"] = f"Bearer {self.tokens['access']}"
+            self.tokens['access'] = response.json().get("access")
+            self.headers['Authorization'] = f"Bearer {self.tokens['access']}"
+            print("🔄 Токен успешно обновлён!")
         else:
-            raise Exception("Не удалось обновить токен!")
+            print("❌ Не удалось обновить токен, получаю новые токены!")
+            self.tokens = self.get_tokens()
+            self.headers["Authorization"] = f"Bearer {self.tokens['access']}"
 
-    def _request(self, method, endpint, data=None):
+    def _request(self, method, endpoint, data=None, retries=1):
 
-        url = f"{self.base_url}/{endpint}"
+        url = f"{self.base_url}/{endpoint}"
 
         try:
             response = requests.request(
                 method=method, url=url, json=data, headers=self.headers
             )
-            if response.status_code == 401:
-                self.refresh_token()
-                return self._request(method, endpint, data)
+            if response.status_code == 401 and retries > 0:
+                print("⚠️ Токен истёк. Пробую обновить!")
+                # self.refresh_token()
+                return self._request(method, endpoint, data, retries=retries - 1)
 
             try:
                 data = response.json()
