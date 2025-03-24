@@ -37,7 +37,7 @@ async def send_ai_response(bot, chat_id, text):
     text = escape_markdown(text)
 
     # Делим текст на части по 4096 символов (лимит Telegram)
-    chunks = [text[i : i + 4096] for i in range(0, len(text), 4096)]
+    chunks = [text[i : i + 4096] for i in range(0, len(text), 4096)]  # noqa
 
     for chunk in chunks:
         try:
@@ -85,7 +85,8 @@ async def handle_ai_text(message: Message, bot: Bot):
 
     MAX_LENGTH = 4096
     for chunk in [
-        response[i : i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)
+        response[i : i + MAX_LENGTH]  # noqa
+        for i in range(0, len(response), MAX_LENGTH)
     ]:
         await bot.send_chat_action(message.chat.id, "typing")
         # await message.answer(escape_markdown(chunk))
@@ -116,7 +117,8 @@ async def handle_ai_photo(message: Message, bot: Bot):
 
     MAX_LENGTH = 4096
     for chunk in [
-        response[i : i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)
+        response[i : i + MAX_LENGTH]  # noqa
+        for i in range(0, len(response), MAX_LENGTH)
     ]:
         await bot.send_chat_action(message.chat.id, "typing")
         await message.answer(chunk)
@@ -148,7 +150,8 @@ async def handle_ai_document(message: Message, bot: Bot):
 
     MAX_LENGTH = 4096
     for chunk in [
-        response[i : i + MAX_LENGTH] for i in range(0, len(response), MAX_LENGTH)
+        response[i : i + MAX_LENGTH]  # noqa
+        for i in range(0, len(response), MAX_LENGTH)
     ]:
         await bot.send_chat_action(message.chat.id, "typing")
         await message.answer(chunk)
